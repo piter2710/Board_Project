@@ -29,10 +29,12 @@ services:
     restart: always
     ports:
       - "8000:8000"
+    env_file:
+      - .env
     environment:
-      - ENVIRONMENT=development
+      # Override localhost from .env to use the 'db' container instead inside docker network
       - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/database
-      - SYNC_DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/database
+      - SYNC_DATABASE_URL=postgresql+psycopg://postgres:postgres@db:5432/database
       - REDIS_URL=redis://redis:6379/0
       - CELERY_BROKER_URL=redis://redis:6379/1
       - CELERY_RESULT_BACKEND=redis://redis:6379/2
@@ -49,10 +51,11 @@ services:
     container_name: fastapi_worker
     restart: always
     command: celery -A celery_app.celery_app worker --loglevel=info
+    env_file:
+      - .env
     environment:
-      - ENVIRONMENT=development
       - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/database
-      - SYNC_DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/database
+      - SYNC_DATABASE_URL=postgresql+psycopg://postgres:postgres@db:5432/database
       - REDIS_URL=redis://redis:6379/0
       - CELERY_BROKER_URL=redis://redis:6379/1
       - CELERY_RESULT_BACKEND=redis://redis:6379/2
