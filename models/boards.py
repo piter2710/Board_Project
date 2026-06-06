@@ -36,11 +36,13 @@ class Board(Base):
     outgoing_connections: Mapped[list["Connections"]] = relationship(
         "Connections",
         foreign_keys="[Connections.starting_board_id]",
-        back_populates="starting_board"
+        back_populates="starting_board",
+        cascade="all, delete-orphan"
     )
 
     incoming_connections: Mapped[list["Connections"]] = relationship(
         "Connections",
         foreign_keys="[Connections.ending_board_id]",
-        back_populates="ending_board"
+        back_populates="ending_board",
+        cascade="all, delete-orphan"
     )

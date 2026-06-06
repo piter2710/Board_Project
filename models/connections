@@ -1,0 +1,47 @@
+from sqlalchemy import Integer, DateTime, ForeignKey, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from datetime import datetime
+
+from database import Base
+
+
+class Connections(Base):
+    __tablename__ = "connections"
+
+    connection_id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
+
+    starting_board_id: Mapped[int] = mapped_column(
+        ForeignKey("boards.id"),
+        index=True
+    )
+
+    ending_board_id: Mapped[int] = mapped_column(
+        ForeignKey("boards.id"),
+        index=True
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now()
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        onupdate=func.now()
+    )
+
+    starting_board = relationship(
+        "Board",
+        foreign_keys=[starting_board_id],
+        back_populates="outgoing_connections"
+    )
+
+    ending_board = relationship(
+        "Board",
+        foreign_keys=[ending_board_id],
+        back_populates="incoming_connections"
+    )

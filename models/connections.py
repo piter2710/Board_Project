@@ -15,8 +15,8 @@ class Connections(Base):
     __tablename__ = "connections"
     
     connection_id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, autoincrement=True)
-    starting_board_id: Mapped[int] = mapped_column(Integer, ForeignKey("boards.id"), index=True)
-    ending_board_id: Mapped[int] = mapped_column(Integer, ForeignKey("boards.id"), index=True)
+    starting_board_id: Mapped[int] = mapped_column(Integer, ForeignKey("boards.id", ondelete="CASCADE"), index=True)
+    ending_board_id: Mapped[int] = mapped_column(Integer, ForeignKey("boards.id", ondelete="CASCADE"), index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now(), server_default=func.now(), onupdate=func.now())
     
